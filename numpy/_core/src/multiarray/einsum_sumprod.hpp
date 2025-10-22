@@ -107,18 +107,29 @@
 #ifdef __cplusplus
 //TODO athurdekoos remove 'extern "C" when einsum.c is refactored to einsum.cpp
 //namespace np::multiarray::einsum {
-//athurdekoos sanity check
-extern "C" void npy_einsum_simprod_experimental();
+
 
 using sum_of_products_fn = void (*)(int nop, char** data, 
     const npy_intp* strides,npy_intp count);
 
+
+extern "C" {
+//athurdekoos sanity check
+#ifdef athurdek_DEBUG 1
+
+sum_of_products_fn npy_einsum_simprod_experimental(int nop, int type_num, 
+    npy_intp itemsize, npy_intp const *fixed_strides);
+
+#endif
+
+
+
 //TODO athurdekoos remove 'extern "C" when einsum.c is refactored to einsum.cpp
 //change name to get_sum_of_products_function also
 NPY_VISIBILITY_HIDDEN
-extern "C" sum_of_products_fn get_sum_of_products_function(int nop, int type_num, 
+sum_of_products_fn get_sum_of_products_function(int nop, int type_num, 
     npy_intp itemsize, npy_intp const *fixed_strides);
-
+}; // extern "C"
 //} // namespace np::multiarray::einsum 
 #endif //__cplusplus
 #endif //NUMPY_CORE_SRC_MULTIARRAY_EINSUM_SUMPROD_H_

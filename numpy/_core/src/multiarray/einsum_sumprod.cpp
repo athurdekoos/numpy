@@ -126,133 +126,63 @@
     #define EINSUM_IS_ALIGNED(x) npy_is_aligned(x, NPY_SIMD_WIDTH)
 #endif
 
-#ifdef athurdek_DEBUG 1
-void npy_einsum_simprod_experimental() {
-        std::cout << "einsum_simprod.hpp successfully linked!\n";
-    }
-#endif
 
-namespace npy_trais{
-    template <typename T>
-    struct TypeTraits {
-        using type = T;
-        using temp_type = T;
+
+//todo need to verify this is correct and pobably change name. Also add private
+namespace npy_trait{
+    struct BaseTraits{
         static constexpr bool is_complex = false;
         static constexpr bool is_float32 = false;
         static constexpr bool is_float64 = false;
+        static constexpr const char* to_func = "";
+        static constexpr const char* from_func = "";
         static constexpr const char* sfx = "";
-        static constexpr const char* to_func = "";
-        static constexpr const char* from_func = "";
+    };
+    
+    template <typename T>
+    struct TypeTraits : BaseTraits {
+        using type = T;
+        using temp_type = T;
+        static constexpr const char* sfx = [] {
+            if constexpr (std::is_same_v<T, npy_byte>) return "s8";
+            else if constexpr (std::is_same_v<T, npy_short>) return "s16";
+            else if constexpr (std::is_same_v<T, npy_int>) return "s32";
+            else if constexpr (std::is_same_v<T, npy_long>) return "long";
+            else if constexpr (std::is_same_v<T, npy_longlong>) return "s64";
+            else if constexpr (std::is_same_v<T, npy_ubyte>) return "u8";
+            else if constexpr (std::is_same_v<T, npy_ushort>) return "u16";
+            else if constexpr (std::is_same_v<T, npy_uint>) return "u32";
+            else if constexpr (std::is_same_v<T, npy_ulong>) return "ulong";
+            else if constexpr (std::is_same_v<T, npy_ulonglong>) return "u64";
+            else if constexpr (std::is_same_v<T, npy_longdouble>) return "longdouble";
+            else return "";
+    }();
     };
 
-    template <> struct TypeTraits<npy_byte> {
-        using type = npy_byte;
-        using temp_type = npy_byte;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "s8";
-        static constexpr const char* to_func = "";
-        static constexpr const char* from_func = "";
-    };
-
-    template <> struct TypeTraits<npy_short> {
-        using type = npy_short;
-        using temp_type = npy_short;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "s16";
-        static constexpr const char* to_func = "";
-        static constexpr const char* from_func = "";
-    };
-
-    template <> struct TypeTraits<npy_int> {
-        using type = npy_int;
-        using temp_type = npy_int;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "s32";
-    };
-
-    template <> struct TypeTraits<npy_long> {
-        using type = npy_long;
-        using temp_type = npy_long;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "long";
-    };
-
-    template <> struct TypeTraits<npy_longlong> {
-        using type = npy_longlong;
-        using temp_type = npy_longlong;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "s64";
-    };
-
-    template <> struct TypeTraits<npy_ubyte> {
-        using type = npy_ubyte;
-        using temp_type = npy_ubyte;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "u8";
-    };
-
-    template <> struct TypeTraits<npy_ushort> {
-        using type = npy_ushort;
-        using temp_type = npy_ushort;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "u16";
-    };
-
-    template <> struct TypeTraits<npy_uint> {
-        using type = npy_uint;
-        using temp_type = npy_uint;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "u32";
-    };
-
-    template <> struct TypeTraits<npy_ulong> {
-        using type = npy_ulong;
-        using temp_type = npy_ulong;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "ulong";
-    };
-
-    template <> struct TypeTraits<npy_ulonglong> {
-        using type = npy_ulonglong;
-        using temp_type = npy_ulonglong;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "u64";
-    };
-
-    template <> struct TypeTraits<npy_half> {
+    template <> struct TypeTraits<npy_half> : BaseTraits{
         using type = npy_half;
-        using temp_type = npy_float;
-        static constexpr bool is_complex = false;
+        using temp_type = npy_half;
         static constexpr bool is_float32 = true;
         static constexpr const char* sfx = "half";
         static constexpr const char* to_func = "npy_float_to_half";
         static constexpr const char* from_func = "npy_half_to_float";
     };
 
-    template <> struct TypeTraits<npy_float> {
+    template <> struct TypeTraits<npy_float> : BaseTraits{
         using type = npy_float;
         using temp_type = npy_float;
-        static constexpr bool is_complex = false;
         static constexpr bool is_float32 = true;
         static constexpr const char* sfx = "f32";
     };
 
-    template <> struct TypeTraits<npy_double> {
+    template <> struct TypeTraits<npy_double> : BaseTraits{
         using type = npy_double;
         using temp_type = npy_double;
-        static constexpr bool is_complex = false;
         static constexpr bool is_float64 = true;
         static constexpr const char* sfx = "f64";
     };
 
-    template <> struct TypeTraits<npy_longdouble> {
-        using type = npy_longdouble;
-        using temp_type = npy_longdouble;
-        static constexpr bool is_complex = false;
-        static constexpr const char* sfx = "longdouble";
-    };
-
-    template <> struct TypeTraits<npy_cfloat> {
+    template <> struct TypeTraits<npy_cfloat> : BaseTraits{
         using type = npy_cfloat;
         using temp_type = npy_float;
         static constexpr bool is_complex = true;
@@ -260,7 +190,7 @@ namespace npy_trais{
         static constexpr const char* sfx = "f32";
     };
 
-    template <> struct TypeTraits<npy_cdouble> {
+    template <> struct TypeTraits<npy_cdouble> : BaseTraits{
         using type = npy_cdouble;
         using temp_type = npy_double;
         static constexpr bool is_complex = true;
@@ -268,14 +198,31 @@ namespace npy_trais{
         static constexpr const char* sfx = "f64";
     };
 
-    template <> struct TypeTraits<npy_clongdouble> {
+    template <> struct TypeTraits<npy_clongdouble> : BaseTraits{
         using type = npy_clongdouble;
         using temp_type = npy_longdouble;
         static constexpr bool is_complex = true;
         static constexpr const char* sfx = "clongdouble";
     };
-}//namespace npy_trais
+};//namespace npy_trais
 
+
+#ifdef athurdek_DEBUG 1
+
+sum_of_products_fn npy_einsum_simprod_experimental(int nop, int type_num, 
+npy_intp itemsize, npy_intp const *fixed_strides){
+    
+    auto testtype = (NPY_TYPES)type_num;
+    
+    auto test = npy_trait::TypeTraits<npy_byte>::is_complex;
+
+    std::cout << test;
+
+    sum_of_products_fn ret;
+    return ret;
+}
+
+#endif
 
 template <typename T, typename AccT = T>
 void sum_of_products_contig_outstride0_one(
@@ -289,14 +236,12 @@ void sum_of_products_contig_outstride0_one(
 
 //athurdekoos update extern 'c' after refactor and namespace
 NPY_VISIBILITY_HIDDEN
-extern "C" sum_of_products_fn get_sum_of_products_function(int nop, int type_num, 
+sum_of_products_fn get_sum_of_products_function(int nop, int type_num, 
     npy_intp itemsize, npy_intp const *fixed_strides)
     {
         int iop;
         
-
-        
-
+    
         //athurdekoos TODO: need to verify if the nullptr is okay
         if (type_num >= NPY_NTYPES_LEGACY) {
             return nullptr;
@@ -304,20 +249,10 @@ extern "C" sum_of_products_fn get_sum_of_products_function(int nop, int type_num
 
         //contiguous reduction
         if (nop == 1 && fixed_strides[0] == itemsize && fixed_strides[1] == 0){
-            if(sum_of_products_fn ret = sum_of_products_contig_outstride0_one(); ret) return ret;
+            sum_of_products_fn ret = sum_of_products_contig_outstride0_one(sum_of_products_fn ret = sum_of_products_contig_outstride0_one());
+            if(ret) return ret;
         }
 
-        
-        if (nop == 1 && fixed_strides[0] == itemsize && fixed_strides[1] == 0){
-            std::optional<sum_of_products_fn>
-
-
-
-
-            
-            _contig_outstride0_unary_specialization_table[type_num];
-
-        }
     
     }
 
