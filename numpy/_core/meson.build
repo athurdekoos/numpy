@@ -1163,6 +1163,8 @@ src_multiarray = multiarray_gen_headers + [
   'src/multiarray/dtype_traversal.c',
   src_file.process('src/multiarray/einsum.c.src'),
   src_file.process('src/multiarray/einsum_sumprod.c.src'),
+  #experimental change of C++ templated version athurdekooos
+  'src/multiarray/einsum_sumprod.cpp',
   'src/multiarray/public_dtype_api.c',
   'src/multiarray/flagsobject.c',
   'src/multiarray/getset.c',

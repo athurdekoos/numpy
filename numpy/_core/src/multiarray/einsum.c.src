@@ -1112,6 +1112,11 @@ PyArray_EinsteinSum(char *subscripts, npy_intp nop,
      * the strides that are fixed for the whole loop.
      */
     stride = NpyIter_GetInnerStrideArray(iter);
+    
+    /* athurdekoos Temporary forward declaration for C++ experimental stub  */
+    extern void npy_einsum_simprod_experimental(void);
+    npy_einsum_simprod_experimental();
+
     sop = get_sum_of_products_function(nop,
                         NpyIter_GetDescrArray(iter)[0]->type_num,
                         NpyIter_GetDescrArray(iter)[0]->elsize,
