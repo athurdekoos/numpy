@@ -85,6 +85,7 @@ NPY_NO_EXPORT int NPY_NUMUSERTYPES = 0;
 #include "umathmodule.h"
 
 #include "unique.h"
+#include "einsum.hpp"
 
 /*
  *****************************************************************************
@@ -2994,6 +2995,11 @@ array_einsum(PyObject *NPY_UNUSED(dummy),
         }
         out = (PyArrayObject *)out_obj;
     }
+
+    // athurdekoos experimental C++ templated
+    PyObject *ExperimentalEinsum = NULL;
+    ExperimentalEinsum = (PyObject *)PyArray_EinsteinSum_Experimental(subscripts, nop, op, dtype,
+                                          order, casting, out);
 
     ret = (PyObject *)PyArray_EinsteinSum(subscripts, nop, op, dtype,
                                           order, casting, out);
