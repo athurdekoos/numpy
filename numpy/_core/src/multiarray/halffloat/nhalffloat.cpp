@@ -7,21 +7,20 @@
 #define NPY_HALF_GENERATE_OVERFLOW 1
 #define NPY_HALF_GENERATE_INVALID 1
 
-#include "numpy/nhalffloat.h"
+#include "nhalffloat.h"
 #include <iostream>
 //TODO: Ask Nathan if has a better way to do this. 
 //Currently trying to work exactly how to structure this 
 
 #include "common.hpp"
+void test_foo() {
+    std::cout << "Hello from nhalffloat.cpp" << std::endl;
+}
 /*
  ********************************************************************
  *                   HALF-PRECISION ROUTINES                        *
  ********************************************************************
  */
-
-void test_foo() {
-    std::cout << "Hello from nhalffloat.cpp" << std::endl;
-}
 // float npy_half_to_float(npy_half h)
 // {
 //     return static_cast<float>(np::Half::FromBits(h));

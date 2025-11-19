@@ -83,4 +83,4 @@
 # Version 21 (NumPy 2.4.0)
 # Add 'same_value' casting, header additions.
 # General loop registration for ufuncs, sort, and argsort
-0x00000015 = fbd24fc5b2ba4f7cd3606ec6128de7a5
+0x00000015 = f709306c9ed25e76a59115eb04576ac9

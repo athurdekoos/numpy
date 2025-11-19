@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Python.h>
 
 //WIP for halffloat updates 

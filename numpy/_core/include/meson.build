@@ -5,7 +5,6 @@ installed_headers = [
   'numpy/arrayscalars.h',
   'numpy/dtype_api.h',
   'numpy/halffloat.h',
-  'numpy/nhalffloat.h',
   'numpy/ndarrayobject.h',
   'numpy/ndarraytypes.h',
   'numpy/npy_2_compat.h',
