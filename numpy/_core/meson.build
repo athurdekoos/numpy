@@ -1190,6 +1190,7 @@ src_multiarray = multiarray_gen_headers + [
   'src/multiarray/stringdtype/dtype.c',
   'src/multiarray/stringdtype/utf8_utils.c',
   'src/multiarray/stringdtype/static_string.c',
+  'src/multiarray/halffloat/nhalffloat.cpp',
   'src/multiarray/temp_elide.c',
   'src/multiarray/usertypes.c',
   'src/multiarray/vdot.c',
