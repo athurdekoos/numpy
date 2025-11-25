@@ -84,4 +84,4 @@
 # Add 'same_value' casting, header additions.
 # General loop registration for ufuncs, sort, and argsort
 #added 'nhalffloat'
-0x00000015 = f709306c9ed25e76a59115eb04576ac9
+0x00000015 = 9eefe93f6d05c9b00e2acae508cb0b1d
