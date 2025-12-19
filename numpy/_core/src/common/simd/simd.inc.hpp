@@ -59,6 +59,12 @@ StoreU(const Vec<TLane> &a, TLane *ptr)
     hn::StoreU(a, _Tag<TLane>(), ptr);
 }
 
+/// Equivalent to Highway: void StoreN(Vec<D> v, D d, T* p, size_t n).
+template <typename TLane>
+HWY_API void StoreN(TLane* ptr, const Vec<TLane>& v, size_t max_lanes_to_store) {
+    hn::StoreN(v, _Tag<TLane>(), ptr, max_lanes_to_store);
+}
+
 /// Returns the number of vector lanes based on the lane type.
 template <typename TLane>
 HWY_API HWY_LANES_CONSTEXPR size_t
@@ -89,6 +95,14 @@ HWY_API Vec<TLane>
 Set(TLane val)
 {
     return hn::Set(_Tag<TLane>(), val);
+}
+
+/// Equivalent to Highway: Vec<D> LoadNOr(V no, D d, const T* p, size_t n).
+template <typename TLane>
+HWY_API Vec<TLane> LoadNOr(const Vec<TLane>& no,
+                           const TLane* ptr,
+                           size_t max_lanes_to_load) {
+    return hn::LoadNOr(no, _Tag<TLane>(), ptr, max_lanes_to_load);
 }
 
 /// Converts a mask to a vector based on the specified lane type.
