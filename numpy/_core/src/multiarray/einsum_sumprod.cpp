@@ -920,9 +920,10 @@ to<npy_float, npy_half>(npy_float v)
  sum_of_products_contig_one(int nop, char **dataptr, npy_intp const *NPY_UNUSED(strides),
                             npy_intp count)
  {
+   //TODO: remove me
+    std::cout<<"[DEBUG]"<< __func__ <<std::endl;
      T *data0 = (T *)dataptr[0];
      T *data_out = (T *)dataptr[1];
-
      NPY_EINSUM_DBG_PRINT1("sum_of_products_contig_one (%d)\n", (int)count);
 
      /* This is placed before the main loop to make small counts faster */
@@ -974,6 +975,8 @@ template <typename T>
 static NPY_GCC_OPT_3 void
 floating_point_sum_of_products_contig_two(const T *data0, const T *data1, T *data_out, npy_intp count)
 {
+    //TODO: remove me
+    std::cout<<"[DEBUG] floating_point_sum_of_products_contig_two";
     const int vstep = np::simd::Lanes<T>();
     const npy_intp vstepx4 = vstep * 4;
 
@@ -997,18 +1000,18 @@ floating_point_sum_of_products_contig_two(const T *data0, const T *data1, T *dat
         const auto abc2 = np::simd::Add(np::simd::Mul(a2, b2), c2);
         const auto abc3 = np::simd::Add(np::simd::Mul(a3, b3), c3);
 
-        np::simd::StoreU(data_out + vstep * 0, abc0);
-        np::simd::StoreU(data_out + vstep * 1, abc1);
-        np::simd::StoreU(data_out + vstep * 2, abc2);
-        np::simd::StoreU(data_out + vstep * 3, abc3);
+        np::simd::StoreU(abc0,data_out + vstep * 0);
+        np::simd::StoreU(abc1,data_out + vstep * 1);
+        np::simd::StoreU(abc2,data_out + vstep * 2);
+        np::simd::StoreU(abc3,data_out + vstep * 3);
     }
 
     for (; count > 0;
          count -= vstep, data0 += vstep, data1 += vstep, data_out += vstep) {
-        auto a = np::simd::LoadNOr(np::simd::Zero<T>(),data0, count);
-        auto b = np::simd::LoadNOr(np::simd::Zero<T>(),data1, count);
-        auto c = np::simd::LoadNOr(np::simd::Zero<T>(),data_out, count);
-        np::simd::StoreN(data_out, count, np::simd::Add(np::simd::Mul(a, b), c));
+        auto a = np::simd::LoadNOr(data0, count);
+        auto b = np::simd::LoadNOr(data1, count);
+        auto c = np::simd::LoadNOr(data_out, count);
+        np::simd::StoreN(data_out,np::simd::Add(np::simd::Mul(a, b), c), count);
     }
 }
 
@@ -1070,10 +1073,15 @@ elementwise_sum_of_products_contig_two(const T *data0, const T *data1, npy_intp 
      static inline NPY_GCC_OPT_3 void eval(npy_float *data0, npy_float *data1,
                                            npy_intp count, npy_float *data_out) noexcept
      {
- #if NPY_SIMD_F32
+
+ #if NPY_HWY
+   //TODO: remove me
+    std::cout<<"[DEBUG] NPY_SIMD_F32"<<std::endl;
          floating_point_sum_of_products_contig_two<npy_float>(data0, data1, data_out,
                                                              count);
  #else   //! NPY_SIMD_F32
+   //TODO: remove me
+    std::cout<<"[DEBUG] NO!!!! NPY_SIMD_F32"<<std::endl;
          elementwise_sum_of_products_contig_two<npy_float, npy_float>(data0, data1, count,
                                                                   data_out);
  #endif  // NPY_SIMD_F32
@@ -1087,10 +1095,14 @@ elementwise_sum_of_products_contig_two(const T *data0, const T *data1, npy_intp 
      static inline NPY_GCC_OPT_3 void eval(npy_double *data0, npy_double *data1,
                                            npy_intp count, npy_double *data_out) noexcept
      {
- #if NPY_SIMD_F64
+ #if NPY_HWY_F64
+   //TODO: remove me
+    std::cout<<"[DEBUG] NPY_SIMD_F64"<<std::endl;
          floating_point_sum_of_products_contig_two<npy_double>(data0, data1, data_out,
                                                              count);
  #else   //! NPY_SIMD_F64
+   //TODO: remove me
+    std::cout<<"[DEBUG] NO!!!! NPY_SIMD_F64"<<std::endl;
          elementwise_sum_of_products_contig_two<npy_double, npy_double>(data0, data1, count,
                                                                     data_out);
  #endif  // NPY_SIMD_F64
@@ -1102,6 +1114,9 @@ elementwise_sum_of_products_contig_two(const T *data0, const T *data1, npy_intp 
  sum_of_products_contig_two(int nop, char **dataptr, npy_intp const *NPY_UNUSED(strides),
                             npy_intp count)
  {
+
+   //TODO: remove me
+    std::cout<<"[DEBUG]"<< __func__ <<std::endl;
      if constexpr (!Is_Complex) {
          T *data0 = (T *)dataptr[0];
          T *data1 = (T *)dataptr[1];
@@ -1185,6 +1200,8 @@ struct Sum_Of_Products_Contig_Three_Stepper<T, AccumType, Start, End, Step, fals
  sum_of_products_contig_any(int nop, char **dataptr, npy_intp const *NPY_UNUSED(strides),
                             npy_intp count)
  {
+        //TODO: remove me
+    std::cout<<"[DEBUG] sum_of_products_contig_any"<< std::endl;
      NPY_EINSUM_DBG_PRINT1("sum_of_products_contig_any (%d)\n", (int)count);
      if constexpr (!Is_Complex) {
          while (count--) {
@@ -2116,6 +2133,9 @@ sum_of_products_fn
 get_sum_of_products_function(int nop, int type_num, npy_intp itemsize,
                              npy_intp const *fixed_strides)
 {
+    
+    //TODO: remove me
+    std::cout<<"[DEBUG] get_sum_of_products_function"<< std::endl;
     int iop;
     // if (type_num >= NPY_NTYPES_LEGACY) {
     //     return NULL;
@@ -2162,9 +2182,13 @@ get_sum_of_products_function(int nop, int type_num, npy_intp itemsize,
 
     /* Contiguous loop */
     if (iop == nop + 1) {
+         //TODO: remove me
+        std::cout<<"[DEBUG] Contiguous loop"  << std::endl;
         return allcontig_specialized_table[type_num][nop <= 3 ? nop : 0];
     }
 
+         //TODO: remove me
+        std::cout<<"[DEBUG] unspecialized table";
     /* None of the above specializations caught it, general loops */
     return unspecialized_table[type_num][nop <= 3 ? nop : 0];
 }

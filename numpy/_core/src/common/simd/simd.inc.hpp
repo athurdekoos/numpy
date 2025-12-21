@@ -99,10 +99,9 @@ Set(TLane val)
 
 /// Equivalent to Highway: Vec<D> LoadNOr(V no, D d, const T* p, size_t n).
 template <typename TLane>
-HWY_API Vec<TLane> LoadNOr(const Vec<TLane>& no,
-                           const TLane* ptr,
+HWY_API Vec<TLane> LoadNOr(const TLane* ptr,
                            size_t max_lanes_to_load) {
-    return hn::LoadNOr(no, _Tag<TLane>(), ptr, max_lanes_to_load);
+    return hn::LoadNOr(np::simd::Zero<TLane>(), _Tag<TLane>(), ptr, max_lanes_to_load);
 }
 
 /// Converts a mask to a vector based on the specified lane type.
