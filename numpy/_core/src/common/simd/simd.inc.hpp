@@ -121,6 +121,13 @@ BitCast(const TVec &v)
     return hn::BitCast(_Tag<TLaneTo>(), v);
 }
 
+// horizontal reduction
+template <typename TLane>
+HWY_API TLane ReduceSum(const Vec<TLane> &v)
+{
+    return hn::ReduceSum(_Tag<TLane>(), v);
+}
+
 // Import common Highway intrinsics
 using hn::Abs;
 using hn::Add;
